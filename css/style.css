@@ -1,0 +1,1049 @@
+/* 앙팡 로지스틱스 시뮬레이터 스타일시트 (style.css) */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #1a1e24;
+    color: #ffffff;
+}
+
+#canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* 번개 플래시 화면 깜빡임 오버레이 */
+#lightning-flash {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.05s ease-out;
+    z-index: 10;
+}
+
+/* ===================================================
+   상단 HUD
+=================================================== */
+#top-hud {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    z-index: 20;
+    pointer-events: none;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.hud-panel {
+    background: rgba(18, 24, 38, 0.88);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.hud-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 85px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.hud-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+    white-space: nowrap;
+}
+
+.hud-value {
+    font-size: 15px;
+    font-weight: 800;
+    color: #f8fafc;
+    white-space: nowrap;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+#hud-money {
+    color: #facc15;
+    font-size: 17px;
+    min-width: 120px;
+    text-align: center;
+    display: inline-block;
+}
+
+#hud-reputation {
+    color: #f59e0b;
+    min-width: 65px;
+    text-align: center;
+    display: inline-block;
+}
+
+#hud-player-inventory {
+    min-width: 90px;
+    text-align: center;
+    display: inline-block;
+}
+
+#hud-revenue, #hud-labor, #hud-profit {
+    min-width: 105px;
+    text-align: center;
+    display: inline-block;
+}
+
+.weather-panel {
+    min-width: 155px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.profit-plus {
+    color: #4ade80 !important;
+}
+
+.profit-minus {
+    color: #f87171 !important;
+}
+
+/* 시간 패널 */
+.time-panel {
+    min-width: 165px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.time-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.time-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+#hud-day-progress {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #38bdf8, #f59e0b);
+    transition: width 0.2s linear;
+}
+
+/* 기상 패널 */
+.weather-panel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#hud-weather-icon {
+    font-size: 22px;
+}
+
+#hud-weather-name {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+#hud-weather-timer {
+    font-size: 12px;
+    font-weight: 800;
+    color: #f87171;
+}
+
+/* ===================================================
+   하단 HUD (컨트롤 바)
+   기획: 좌측부터 순서대로 [알바 관리], [업그레이드], [앙팡데이]
+=================================================== */
+#bottom-hud {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 16px;
+    z-index: 20;
+}
+
+.hud-btn {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(18, 24, 38, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 14px;
+    padding: 12px 24px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    transition: all 0.2s ease;
+}
+
+.hud-btn:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.hud-btn:active {
+    transform: translateY(0);
+}
+
+.btn-icon {
+    font-size: 20px;
+}
+
+/* 앙팡데이 피버 버튼 */
+#btn-fever {
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    border: 1px solid #fde047;
+}
+
+#btn-fever.fever-active {
+    animation: feverPulse 1s infinite alternate;
+    background: linear-gradient(135deg, #e11d48, #fbbf24);
+}
+
+@keyframes feverPulse {
+    0% { transform: scale(1); box-shadow: 0 0 15px #f59e0b; }
+    100% { transform: scale(1.06); box-shadow: 0 0 35px #ef4444; }
+}
+
+.fever-timer {
+    font-size: 12px;
+    color: #fef08a;
+    font-weight: 800;
+}
+
+/* ===================================================
+   지역별 출고 트럭 출발 버튼 패널
+=================================================== */
+#outbound-trucks-panel {
+    position: absolute;
+    right: 28px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 25;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    pointer-events: none;
+}
+
+.truck-depart-btn {
+    pointer-events: auto;
+    background: rgba(18, 24, 38, 0.92);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    padding: 12px 18px;
+    cursor: pointer;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 200px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s ease;
+    backdrop-filter: blur(8px);
+}
+
+.truck-depart-btn:hover {
+    transform: translateX(-4px) scale(1.03);
+}
+
+.truck-btn-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.truck-badge {
+    font-size: 13px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.badge-daegu {
+    background: rgba(245, 158, 11, 0.25);
+    color: #fbbf24;
+    border: 1px solid #f59e0b;
+}
+
+.badge-busan {
+    background: rgba(59, 130, 246, 0.25);
+    color: #60a5fa;
+    border: 1px solid #3b82f6;
+}
+
+.badge-seoul {
+    background: rgba(34, 197, 94, 0.25);
+    color: #4ade80;
+    border: 1px solid #22c55e;
+}
+
+.truck-depart-btn .cargo-count {
+    font-size: 14px;
+    font-weight: 800;
+    color: #e2e8f0;
+}
+
+.truck-depart-btn.btn-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.truck-depart-btn.btn-ready {
+    border-color: #38bdf8;
+    background: rgba(15, 23, 42, 0.95);
+    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.35);
+}
+
+.truck-depart-btn.btn-ready:hover {
+    background: rgba(14, 116, 144, 0.9);
+}
+
+.truck-depart-btn.btn-full-load {
+    background: linear-gradient(135deg, #b45309, #d97706) !important;
+    border-color: #fef08a !important;
+    box-shadow: 0 8px 30px rgba(245, 158, 11, 0.6) !important;
+    animation: fullLoadPulse 1s infinite alternate;
+}
+
+@keyframes fullLoadPulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.04); }
+}
+
+.depart-label {
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.cargo-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: #d1fae5;
+}
+
+/* ===================================================
+   조작 가이드 HUD (좌측 하단)
+=================================================== */
+#controls-guide {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    z-index: 20;
+    background: rgba(18, 24, 38, 0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.6;
+    pointer-events: none;
+}
+
+#controls-guide b {
+    color: #e2e8f0;
+}
+
+/* ===================================================
+   모달 공통 스타일
+=================================================== */
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 15, 25, 0.7);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: #182234;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 860px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 26px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 14px;
+}
+
+.modal-header h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #f8fafc;
+}
+
+.modal-close-btn {
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+
+.modal-close-btn:hover {
+    color: #ffffff;
+}
+
+/* 알바 관리 모달 세부 */
+.modal-section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #38bdf8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.worker-card {
+    background: rgba(30, 41, 59, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    transition: transform 0.2s;
+}
+
+.worker-card:hover {
+    transform: translateY(-4px);
+    border-color: #38bdf8;
+}
+
+.veteran-card {
+    border-color: #f59e0b !important;
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.15), rgba(30, 41, 59, 0.9)) !important;
+}
+
+.card-badge {
+    position: absolute;
+    top: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #facc15;
+}
+
+.card-icon {
+    font-size: 34px;
+    margin: 14px 0 8px 0;
+}
+
+.card-name {
+    font-size: 16px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.card-role {
+    font-size: 12px;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-bottom: 6px;
+}
+
+.card-desc {
+    font-size: 11px;
+    color: #94a3b8;
+    min-height: 32px;
+    line-height: 1.4;
+    margin-bottom: 10px;
+}
+
+.card-cost, .card-wage {
+    font-size: 12px;
+    color: #cbd5e1;
+    margin-bottom: 4px;
+}
+
+.btn-hire {
+    margin-top: 10px;
+    width: 100%;
+    background: #0284c7;
+    border: none;
+    border-radius: 8px;
+    padding: 9px;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn-hire:hover {
+    background: #0369a1;
+}
+
+.btn-secondary {
+    background: #334155;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 6px 14px;
+    color: #f1f5f9;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background: #475569;
+}
+
+.active-workers-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.worker-row {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.w-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+}
+
+.w-name {
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.w-role {
+    color: #38bdf8;
+    font-weight: 600;
+}
+
+.w-tier {
+    font-weight: 700;
+}
+
+.w-timer {
+    color: #f59e0b;
+    font-size: 11px;
+}
+
+.w-wage {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.btn-fire {
+    background: #ef4444;
+    border: none;
+    border-radius: 6px;
+    padding: 4px 10px;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.empty-list {
+    font-size: 13px;
+    color: #64748b;
+    text-align: center;
+    padding: 18px;
+}
+
+/* 업그레이드 모달 세부 */
+.upgrades-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.upgrade-card {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.tier-card {
+    grid-column: span 2;
+    border-color: #f59e0b;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(30, 41, 59, 0.8));
+}
+
+.region-card {
+    border-color: #38bdf8;
+}
+
+.up-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.up-desc {
+    font-size: 12px;
+    color: #94a3b8;
+    line-height: 1.4;
+}
+
+.up-next {
+    font-size: 11px;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-top: 4px;
+}
+
+.btn-upgrade {
+    margin-top: 10px;
+    background: #10b981;
+    border: none;
+    border-radius: 8px;
+    padding: 9px;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn-upgrade:hover {
+    background: #059669;
+}
+
+/* 테스트용 치트 버튼 */
+.btn-cheat {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 8px 14px;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+    transition: all 0.15s ease;
+}
+
+.btn-cheat:hover {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.5);
+}
+
+.btn-cheat:active {
+    transform: translateY(0);
+}
+
+/* 날씨 테스트 디버그 패널 */
+.weather-test-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 4px 8px;
+}
+
+.weather-test-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-right: 2px;
+}
+
+.btn-weather-test {
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 15px;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.btn-weather-test:hover {
+    background: #334155;
+    border-color: #38bdf8;
+    transform: translateY(-2px) scale(1.1);
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+}
+
+.btn-weather-test:active {
+    transform: translateY(0) scale(1.0);
+}
+
+/* 알바 정원 표시 */
+.card-cap {
+    font-size: 11px;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 6px;
+    padding: 3px 6px;
+    text-align: center;
+    margin-top: 2px;
+}
+
+.card-cap.cap-full {
+    color: #f87171;
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* 단기 베테랑 전용 채용 바/그리드 */
+.veteran-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.veteran-quick-card {
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.18), rgba(30, 41, 59, 0.9));
+    border: 1px solid #f59e0b;
+    border-radius: 12px;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.veteran-quick-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.25);
+}
+
+.veteran-quick-card .v-icon {
+    font-size: 24px;
+}
+
+.veteran-quick-card .v-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #fde68a;
+}
+
+.veteran-quick-card .v-desc {
+    font-size: 10px;
+    color: #cbd5e1;
+    min-height: 24px;
+    line-height: 1.2;
+}
+
+.veteran-quick-card .v-cost {
+    font-size: 11px;
+    font-weight: 700;
+    color: #facc15;
+    margin-top: 2px;
+}
+
+.btn-hire-veteran {
+    margin-top: 6px;
+    width: 100%;
+    background: linear-gradient(135deg, #d97706, #b45309);
+    border: 1px solid #f59e0b;
+    border-radius: 6px;
+    padding: 6px 0;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn-hire-veteran:hover {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.btn-disabled {
+    background: #475569 !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+}
+
+/* ===================================================
+   알림 토스트 & 피버 배너
+=================================================== */
+#notification-toast {
+    position: absolute;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: rgba(15, 23, 42, 0.94);
+    backdrop-filter: blur(8px);
+    border: 1px solid #38bdf8;
+    border-radius: 12px;
+    padding: 12px 24px;
+    color: #f8fafc;
+    font-size: 14px;
+    font-weight: 700;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s ease;
+    z-index: 999999 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* ===================================================
+   가상 조이스틱 UI (클릭 & 드래그)
+=================================================== */
+#virtual-joystick-base {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.45);
+    border: 2px solid rgba(56, 189, 248, 0.7);
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 80;
+    display: none;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+}
+
+#virtual-joystick-knob {
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #38bdf8, #0284c7);
+    border: 2px solid #ffffff;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 81;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+#notification-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+#fever-banner {
+    position: absolute;
+    top: 80px;
+    width: 100%;
+    background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.85), rgba(245, 158, 11, 0.85), transparent);
+    padding: 10px 0;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #fef08a;
+    display: none;
+    z-index: 40;
+    animation: feverGlow 1.2s infinite alternate;
+}
+
+#fever-banner.show {
+    display: block;
+}
+
+@keyframes feverGlow {
+    from { text-shadow: 0 0 10px #f59e0b; }
+    to { text-shadow: 0 0 25px #ef4444, 0 0 40px #facc15; }
+}
+
+/* 오분류 택배 발생 좌측 점멸 경고 패널 */
+/* 화면 좌측 상단 실시간 경보 & 긴급 퀘스트 UI 컨테이너 */
+#left-alerts-container {
+    position: absolute;
+    left: 20px;
+    top: 110px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 35;
+    pointer-events: none;
+}
+
+/* 긴급 퀘스트 배너 패널 (비상 발전기 / 도로 제설 / 입구 차수판) */
+#emergency-quest-panel {
+    background: rgba(225, 29, 72, 0.95);
+    backdrop-filter: blur(8px);
+    border: 2px solid #fecdd3;
+    border-radius: 12px;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ffffff;
+    box-shadow: 0 8px 30px rgba(225, 29, 72, 0.6);
+    animation: emergencyPulse 1.2s infinite alternate;
+    pointer-events: auto;
+    transition: opacity 0.3s ease;
+}
+
+#emergency-quest-panel .quest-icon {
+    font-size: 26px;
+    animation: iconBounce 0.8s infinite alternate;
+}
+
+#emergency-quest-panel .quest-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+#emergency-quest-panel .quest-desc {
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffe4e6;
+    margin-top: 2px;
+}
+
+#missort-warning-panel {
+    background: rgba(220, 38, 38, 0.92);
+    backdrop-filter: blur(8px);
+    border: 2px solid #fecaca;
+    border-radius: 12px;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ffffff;
+    box-shadow: 0 8px 30px rgba(220, 38, 38, 0.5);
+    animation: missortPulse 1s infinite alternate;
+    pointer-events: auto;
+}
+
+#missort-warning-panel .warning-icon {
+    font-size: 26px;
+    animation: iconBounce 0.8s infinite alternate;
+}
+
+#missort-warning-panel .warning-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+#missort-warning-panel .warning-desc {
+    font-size: 11px;
+    font-weight: 600;
+    color: #fee2e2;
+    margin-top: 2px;
+}
+
+@keyframes missortPulse {
+    0% { transform: scale(1); box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+    100% { transform: scale(1.04); box-shadow: 0 0 24px rgba(239, 68, 68, 0.9), 0 0 40px rgba(245, 158, 11, 0.6); }
+}
+
+@keyframes iconBounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-4px); }
+}
+
+.hidden {
+    display: none !important;
+}
+
+.night-badge {
+    color: #c084fc;
+    font-size: 11px;
+    font-weight: 800;
+    margin-left: 3px;
+    text-shadow: 0 0 6px rgba(192, 132, 252, 0.6);
+}
